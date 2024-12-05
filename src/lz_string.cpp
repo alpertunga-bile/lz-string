@@ -1,7 +1,6 @@
 #include "lz_string.hpp"
 
 #include <cmath>
-#include <codecvt>
 #include <functional>
 #include <numeric>
 #include <unordered_map>
@@ -13,7 +12,7 @@
 std::u16string _compress(std::u16string_view, uint8_t,
                          const std::function<std::u16string(uint32_t)> &);
 
-namespace pxd {
+namespace pxd::lz_string {
 
 std::u16string compress(std::u16string_view input) {
   if (input.length() == 0) {
@@ -25,7 +24,7 @@ std::u16string compress(std::u16string_view input) {
   });
 }
 
-} // namespace pxd
+} // namespace pxd::lz_string
 
 constexpr uint32_t char_code_at(std::u16string_view str, int index) {
   return static_cast<uint32_t>(str.at(index));
@@ -42,7 +41,7 @@ _compress(std::u16string_view uncompressed_str, uint8_t bits_per_char,
   uint32_t value = 0;
 
   std::unordered_map<std::u16string, uint32_t> context_dictionary = {};
-  std::unordered_map<std::u16string, bool> context_dictionary_to_create = {};
+  std::unordered_set<std::u16string> context_set_to_create = {};
 
   std::u16string context_c = {};
   std::u16string context_wc = {};
@@ -61,37 +60,92 @@ _compress(std::u16string_view uncompressed_str, uint8_t bits_per_char,
   for (size_t ii = 0; ii < uncompressed_length; ++ii) {
     context_c = uncompressed_str.at(ii);
 
-    if (context_dictionary.contains(context_c)) {
+    if (!context_dictionary.contains(context_c)) {
       context_dictionary[context_c] = context_dict_size++;
-      context_dictionary_to_create[context_c] = true;
+      context_set_to_create.insert(context_c);
     }
 
     context_wc = context_w + context_c;
 
     if (context_dictionary.contains(context_wc)) {
       context_w = context_wc;
-      continue;
-    }
+    } else {
+      if (context_set_to_create.contains(context_w)) {
+        if (char_code_at(context_w, 0) < 256) {
+          for (int i = 0; i < context_numbits; ++i) {
+            context_data_val = context_data_val << 1u;
 
-    if (context_dictionary_to_create.contains(context_w)) {
-      if (char_code_at(context_w, 0) < 256) {
-        for (int i = 0; i < context_numbits; ++i) {
-          context_data_val = context_data_val << 1u;
+            if (context_data_position != bits_per_char - 1) {
+              context_data_position++;
+              continue;
+            }
 
-          if (context_data_position != bits_per_char - 1) {
-            context_data_position++;
-            continue;
+            context_data_position = 0;
+            context_data.push_back(get_char_from_int(context_data_val));
+            context_data_val = 0;
           }
 
-          context_data_position = 0;
-          context_data.push_back(get_char_from_int(context_data_val));
-          context_data_val = 0;
+          value = char_code_at(context_w, 0);
+
+          for (int i = 0; i < 8; i++) {
+            context_data_val = (context_data_val << 1u) | (value & 1u);
+            value = value >> 1u;
+
+            if (context_data_position != bits_per_char - 1) {
+              context_data_position++;
+              continue;
+            }
+
+            context_data_position = 0;
+            context_data.push_back(get_char_from_int(context_data_val));
+            context_data_val = 0;
+          }
+        } else {
+          value = 1;
+
+          for (int i = 0; i < context_numbits; ++i) {
+            context_data_val = (context_data_val << 1u) | value;
+            value = 0;
+
+            if (context_data_position != bits_per_char - 1) {
+              context_data_position++;
+              continue;
+            }
+
+            context_data_position = 0;
+            context_data.push_back(get_char_from_int(context_data_val));
+            context_data_val = 0;
+          }
+
+          value = char_code_at(context_w, 0);
+
+          for (int i = 0; i < 16; ++i) {
+            context_data_val = (context_data_val << 1) | (value & 1);
+            value = value >> 1u;
+
+            if (context_data_position != bits_per_char - 1) {
+              context_data_position++;
+            } else {
+              context_data_position = 0;
+              context_data.push_back(get_char_from_int(context_data_val));
+              context_data_val = 0;
+            }
+          }
         }
 
-        value = char_code_at(context_w, 0);
+        context_enlarge_in--;
+        if (context_enlarge_in == 0) {
+          context_enlarge_in =
+              static_cast<uint32_t>(std::pow(2, context_numbits));
+          context_numbits++;
+        }
 
-        for (int i = 0; i < 8; i++) {
-          context_data_val = (context_data_val << 1u) | (value & 1u);
+        context_set_to_create.erase(context_w);
+      } else {
+        value = context_dictionary[context_w];
+
+        for (int i = 0; i < context_numbits; ++i) {
+          context_data_val = (context_data_val << 1) | (value & 1);
           value = value >> 1u;
 
           if (context_data_position != bits_per_char - 1) {
@@ -99,37 +153,6 @@ _compress(std::u16string_view uncompressed_str, uint8_t bits_per_char,
             continue;
           }
 
-          context_data_position = 0;
-          context_data.push_back(get_char_from_int(context_data_val));
-          context_data_val = 0;
-        }
-      } else {
-        value = 1;
-
-        for (int i = 0; i < context_numbits; ++i) {
-          context_data_val = (context_data_val << 1u) | value;
-          value = 0;
-
-          if (context_data_position != bits_per_char - 1) {
-            context_data_position++;
-            continue;
-          }
-
-          context_data_position = 0;
-          context_data.push_back(get_char_from_int(context_data_val));
-          context_data_val = 0;
-        }
-      }
-
-      value = char_code_at(context_w, 0);
-
-      for (int i = 0; i < 16; ++i) {
-        context_data_val = (context_data_val << 1) | (value & 1);
-        value = value >> 1u;
-
-        if (context_data_position != bits_per_char - 1) {
-          context_data_position++;
-        } else {
           context_data_position = 0;
           context_data.push_back(get_char_from_int(context_data_val));
           context_data_val = 0;
@@ -143,37 +166,13 @@ _compress(std::u16string_view uncompressed_str, uint8_t bits_per_char,
         context_numbits++;
       }
 
-      context_dictionary_to_create.erase(context_w);
-    } else {
-      value = context_dictionary[context_w];
-
-      for (int i = 0; i < context_numbits; ++i) {
-        context_data_val = (context_data_val << 1) | (value & 1);
-        value = value >> 1u;
-
-        if (context_data_position != bits_per_char - 1) {
-          context_data_position++;
-          continue;
-        }
-
-        context_data_position = 0;
-        context_data.push_back(get_char_from_int(context_data_val));
-        context_data_val = 0;
-      }
+      context_dictionary[context_wc] = context_dict_size++;
+      context_w = context_c;
     }
-
-    context_enlarge_in--;
-    if (context_enlarge_in == 0) {
-      context_enlarge_in = static_cast<uint32_t>(std::pow(2, context_numbits));
-      context_numbits++;
-    }
-
-    context_dictionary[context_wc] = context_dict_size++;
-    context_w = context_c;
   }
 
   if (context_w.compare(u"") != 0) {
-    if (context_dictionary_to_create.contains(context_w)) {
+    if (context_set_to_create.contains(context_w)) {
       if (char_code_at(context_w, 0) < 256) {
         for (int i = 0; i < context_numbits; ++i) {
           if (context_data_position != bits_per_char - 1) {
@@ -196,6 +195,7 @@ _compress(std::u16string_view uncompressed_str, uint8_t bits_per_char,
             context_data_position++;
             continue;
           }
+
           context_data_position = 0;
           context_data.push_back(get_char_from_int(context_data_val));
           context_data_val = 0;
@@ -240,7 +240,7 @@ _compress(std::u16string_view uncompressed_str, uint8_t bits_per_char,
         context_numbits++;
       }
 
-      context_dictionary_to_create.erase(context_w);
+      context_set_to_create.erase(context_w);
     } else {
       value = context_dictionary[context_w];
 

@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace pxd {
+namespace pxd::lz_string {
 
 constexpr inline std::string to_utf8(std::u16string_view value) {
   return {value.begin(), value.end()};
@@ -14,6 +14,7 @@ constexpr inline std::u16string to_utf16(std::string_view value) {
 }
 
 std::u16string compress(std::u16string_view input);
-} // namespace pxd
+
+} // namespace pxd::lz_string
 
 #endif

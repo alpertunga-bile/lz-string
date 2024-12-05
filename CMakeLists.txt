@@ -28,7 +28,7 @@ set(PXD_HEADER_FILES
 
 set(PXD_SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-    ${PXD_INCLUDE_DIR}/lz_string.cpp
+    ${PXD_SOURCE_DIR}/lz_string.cpp
 )
 
 include_directories(
@@ -36,7 +36,12 @@ include_directories(
 )
 
 set(COMMON_STD_HEADERS
-
+    <string>
+    <string_view>
+    <vector>
+    <unordered_map>
+    <cmath>
+    <numeric>
 )
 
 set(LIBS_TO_LINK
