@@ -1,0 +1,4 @@
+#ifndef _LZ_STRING_MODERN_LZ_STRING_HPP
+#define _LZ_STRING_MODERN_LZ_STRING_HPP
+
+#endif
