@@ -5,14 +5,10 @@
 auto main() -> int {
   std::string input = "hello there";
 
-  std::u16string str_16(input.begin(), input.end());
+  std::u16string compressed =
+      pxd::lz_string::compress(pxd::lz_string::to_utf16(input));
 
-  std::cout << pxd::lz_string::to_utf8(str_16) << "\n";
-
-  std::string encoded =
-      pxd::lz_string::to_utf8(pxd::lz_string::compress(str_16));
-
-  std::cout << encoded << "\n";
+  std::u16string decompressed = pxd::lz_string::decompress(compressed);
 
   return 0;
 }

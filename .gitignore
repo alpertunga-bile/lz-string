@@ -163,3 +163,5 @@ cython_debug/
 
 build/
 app.log
+
+test_js/node_modules/
