@@ -64,8 +64,15 @@ target_precompile_headers(
 # -- Test Executable
 
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
+    set(PXD_TEST_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test_src)
+
     set(PXD_TEST_SOURCE_FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/test.cpp
+        ${PXD_TEST_SOURCE_DIR}/utilities.hpp
+
+        ${PXD_TEST_SOURCE_DIR}/utilities.cpp
+        ${PXD_TEST_SOURCE_DIR}/compress_tests.cpp
+        ${PXD_TEST_SOURCE_DIR}/compress_utf16_tests.cpp
+        ${PXD_TEST_SOURCE_DIR}/compress_base64_tests.cpp
         ${PXD_SOURCE_FILES}
     )
 
@@ -93,6 +100,7 @@ if(${CMAKE_BUILD_TYPE} MATCHES Debug)
 
     target_precompile_headers(
         ${PXD_TEST_PROJECT_NAME} PRIVATE
+        ${PXD_TEST_SOURCE_DIR}/utilities.hpp
         ${COMMON_STD_HEADERS}
         ${PXD_HEADER_FILES}
     )
