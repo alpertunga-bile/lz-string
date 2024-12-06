@@ -15,7 +15,7 @@ if(NOT MSVC)
 endif()
 
 if(NOT WIN32)
-    set(IWYU_ARGS include-what-you-use -w -Xiwyu --verbose=7)
+    set(IWYU_ARGS "include-what-you-use -w -Xiwyu --verbose=7")
     add_compile_definitions(CMAKE_CXX_INCLUDE_WHAT_YOU_USE=${IWYU_ARGS})
 endif(NOT WIN32)
 
@@ -45,6 +45,7 @@ set(COMMON_STD_HEADERS
     <unordered_map>
     <unordered_set>
     <vector>
+    <cstdint>
 )
 
 set(LIBS_TO_LINK
