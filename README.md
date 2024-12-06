@@ -1,6 +1,6 @@
 # lz_string
 
-C++20 port of [lz-string](https://github.com/pieroxy/lz-string)
+C++20 implemantation of [lz-string](https://github.com/pieroxy/lz-string)
 
 ## Features
 - Includes all compresses and decompresses (except ```UInt8Array``` right now)
