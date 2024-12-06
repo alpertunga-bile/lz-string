@@ -96,7 +96,7 @@ std::u16string compressUTF16(std::u16string_view input) {
                    [](uint32_t a) {
                      return std::u16string(1, static_cast<char16_t>(a + 32u));
                    }) +
-         u"";
+         u" ";
 }
 
 std::u16string decompressUTF16(std::u16string_view input) {
