@@ -1,16 +1,33 @@
-# PXD_cpp_template
+# lz_string
 
-Starting point for cpp projects of the PixelDancer projects.
+C++20 port of [lz-string](https://github.com/pieroxy/lz-string)
 
 ## Features
-- Install the precompiled binaries from the Github repositories with ```packages.json``` (See [this repository](https://github.com/alpertunga-bile/third_wheel) for more information)
-- Providing CMakeLists.txt file template
-- Providing useful ```.cmake``` files
-- Providing [PXD-STL](https://github.com/alpertunga-bile/PXD-STL) as the third-party repository
+- Includes all compresses and decompresses (except ```UInt8Array``` right now)
+- No dependencies (tests require GoogleTest)
 
-## Usage
-- Clone the repository with ```git clone https://github.com/alpertunga-bile/PXD_cpp_template.git``` command
-- Fill the ```packages.json``` for precompiled binaries to be installed from the Github repositories
-- Run
-  - the ```setup.bat``` file if you are using Windows OS
-  - the ```setup.sh``` file if you are using Linux OS
+## Tests
+- Current tests are:
+
+| Test Name  | Description                                         |
+| :--------: | :-------------------------------------------------- |
+| HelloWorld | Classic hello world                                 |
+|  AllASCII  | Including all the ASCII characters                  |
+|    JSON    | Temp json including all data types except float     |
+| JSONFloat  | Temp json file including floats, objects and arrays |
+
+- Can run the tests with ```run_tests``` script files.
+
+### Test Results
+
+- Last updated date (dd-MM-yyyy): 06-12-2024
+
+|    Function    | HelloWorld | AllASCII | JSON  | JSONFloat |
+| :------------: | :--------: | :------: | :---: | :-------: |
+|    Compress    |     ✅      |    ❎     |   ✅   |     ❎     |
+| CompressUTF16  |     ✅      |    ❎     |   ✅   |     ❎     |
+| CompressBase64 |     ✅      |    ❎     |   ✅   |     ❎     |
+|  CompressURI   |     ✅      |    ❎     |   ✅   |     ❎     |
+
+- ✅ : Passed 
+- ❎ : Failed   
