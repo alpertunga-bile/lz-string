@@ -4,11 +4,10 @@
 #include <cmath>
 #include <functional>
 #include <numeric>
+#include <string_view>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-
-#include <string_view>
 
 /*
  * --------------------------------------------------------------------------------------------------
@@ -18,7 +17,7 @@
 std::u16string _compress(std::u16string_view, uint8_t,
                          const std::function<std::u16string(uint32_t)> &);
 
-std::u16string _decompress(uint32_t, uint32_t,
+std::u16string _decompress(size_t, uint32_t,
                            const std::function<uint16_t(size_t)> &);
 
 /*
@@ -30,9 +29,10 @@ constexpr uint32_t char_code_at(std::u16string_view str, int index) {
   return static_cast<uint32_t>(str.at(index));
 }
 
-template <typename T> constexpr T join_array(const std::vector<T> &vec) {
-  return std::accumulate(vec.begin(), vec.end(), T{},
-                         [](const T &a, const T &b) { return a + b; });
+constexpr std::u16string join_array(const std::vector<std::u16string> &vec) {
+  return std::accumulate(
+      vec.begin(), vec.end(), std::u16string{},
+      [](const std::u16string &a, const std::u16string &b) { return a + b; });
 }
 
 constexpr std::u16string from_char_code(uint32_t value) {
@@ -48,8 +48,7 @@ const std::u16string key_uri_safe =
 std::unordered_map<std::u16string, std::unordered_map<char16_t, uint16_t>>
     base_reverse_dict = {};
 
-const uint16_t get_base_value(const std::u16string &alphabet,
-                              char16_t character) {
+uint16_t get_base_value(const std::u16string &alphabet, char16_t character) {
   if (!base_reverse_dict.contains(alphabet)) {
     size_t alphabet_length = alphabet.length();
 
@@ -482,10 +481,10 @@ uint32_t calculate_bits(DecompressionTracker &data, uint32_t power,
 }
 
 std::u16string
-_decompress(uint32_t length, uint32_t reset_value,
+_decompress(size_t length, uint32_t reset_value,
             const std::function<uint16_t(size_t)> &get_next_value) {
   std::vector<std::u16string> dictionary = {u"0", u"1", u"2"};
-  std::vector<std::u16string> result = {};
+  std::vector<std::u16string> result(length);
 
   DecompressionTracker data = {get_next_value(0), reset_value, 1};
 
