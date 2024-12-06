@@ -37,6 +37,28 @@ std::u16string decompress(std::u16string_view input) {
   });
 }
 
+std::u16string compressUTF16(std::u16string_view input) {
+  if (input.empty()) {
+    return u"";
+  }
+
+  return _compress(input, 15,
+                   [](uint32_t a) {
+                     return std::u16string(1, static_cast<char16_t>(a + 32u));
+                   }) +
+         u"";
+}
+
+std::u16string decompressUTF16(std::u16string_view input) {
+  if (input.empty()) {
+    return u"";
+  }
+
+  return _decompress(input.length(), 16384, [input](size_t index) {
+    return static_cast<uint16_t>(input.at(index)) - 32u;
+  });
+}
+
 } // namespace pxd::lz_string
 
 constexpr uint32_t char_code_at(std::u16string_view str, int index) {
@@ -416,6 +438,10 @@ _decompress(uint32_t length, uint32_t reset_value,
 
     case 2:
       return join_array(result);
+
+    default:
+      c_number = bits;
+      break;
     }
 
     if (enlarge_in == 0) {

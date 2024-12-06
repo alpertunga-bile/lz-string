@@ -15,6 +15,8 @@ constexpr inline std::u16string to_utf16(std::string_view value) {
 
 std::u16string compress(std::u16string_view input);
 std::u16string decompress(std::u16string_view input);
+std::u16string compressUTF16(std::u16string_view input);
+std::u16string decompressUTF16(std::u16string_view input);
 
 } // namespace pxd::lz_string
 
