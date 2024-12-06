@@ -1,4 +1,4 @@
-# lz_string
+# lz-string
 
 C++20 implemantation of [lz-string](https://github.com/pieroxy/lz-string)
 
