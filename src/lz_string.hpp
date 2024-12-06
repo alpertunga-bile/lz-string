@@ -17,6 +17,10 @@ std::u16string compress(std::u16string_view input);
 std::u16string decompress(std::u16string_view input);
 std::u16string compressUTF16(std::u16string_view input);
 std::u16string decompressUTF16(std::u16string_view input);
+std::u16string compressBase64(std::u16string_view input);
+std::u16string decompressBase64(std::u16string_view input);
+std::u16string compressEncodedURI(std::u16string_view input);
+std::u16string decompressEncodedURI(std::u16string_view input);
 
 } // namespace pxd::lz_string
 

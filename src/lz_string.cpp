@@ -1,5 +1,6 @@
 #include "lz_string.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <functional>
 #include <numeric>
@@ -9,11 +10,61 @@
 
 #include <string_view>
 
+/*
+ * --------------------------------------------------------------------------------------------------
+ * -- Forward declaration of internal functions
+ */
+
 std::u16string _compress(std::u16string_view, uint8_t,
                          const std::function<std::u16string(uint32_t)> &);
 
 std::u16string _decompress(uint32_t, uint32_t,
                            const std::function<uint16_t(size_t)> &);
+
+/*
+ * --------------------------------------------------------------------------------------------------
+ * -- Helper functions
+ */
+
+constexpr uint32_t char_code_at(std::u16string_view str, int index) {
+  return static_cast<uint32_t>(str.at(index));
+}
+
+template <typename T> constexpr T join_array(const std::vector<T> &vec) {
+  return std::accumulate(vec.begin(), vec.end(), T{},
+                         [](const T &a, const T &b) { return a + b; });
+}
+
+constexpr std::u16string from_char_code(uint32_t value) {
+  return {static_cast<char16_t>(value)};
+}
+
+const std::u16string key_base_64 =
+    u"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+const std::u16string key_uri_safe =
+    u"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$";
+
+std::unordered_map<std::u16string, std::unordered_map<char16_t, uint16_t>>
+    base_reverse_dict = {};
+
+const uint16_t get_base_value(const std::u16string &alphabet,
+                              char16_t character) {
+  if (!base_reverse_dict.contains(alphabet)) {
+    size_t alphabet_length = alphabet.length();
+
+    for (size_t i = 0; i < alphabet_length; ++i) {
+      base_reverse_dict[alphabet][alphabet.at(i)] = static_cast<uint16_t>(i);
+    }
+  }
+
+  return base_reverse_dict[alphabet][character];
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------
+ * -- Public function declarations
+ */
 
 namespace pxd::lz_string {
 
@@ -59,16 +110,71 @@ std::u16string decompressUTF16(std::u16string_view input) {
   });
 }
 
+std::u16string compressBase64(std::u16string_view input) {
+  if (input.empty()) {
+    return u"";
+  }
+
+  std::u16string result = _compress(input, 6, [](uint32_t a) {
+    return std::u16string(1, key_base_64.at(a));
+  });
+
+  size_t result_modulo = result.length() % 4;
+
+  switch (result_modulo) {
+  case 0:
+    return result;
+  case 1:
+    return result + u"===";
+  case 2:
+    return result + u"==";
+  case 3:
+    return result + u"=";
+  default:
+    return result;
+  }
+}
+
+std::u16string decompressBase64(std::u16string_view input) {
+  if (input.empty()) {
+    return u"";
+  }
+
+  return _decompress(input.length(), 32, [input](size_t index) {
+    return get_base_value(key_base_64, input.at(index));
+  });
+}
+
+std::u16string compressEncodedURI(std::u16string_view input) {
+  if (input.empty()) {
+    return u"";
+  }
+
+  return _compress(input, 6, [](uint32_t a) {
+    return std::u16string(1, key_uri_safe.at(a));
+  });
+}
+
+std::u16string decompressEncodedURI(std::u16string_view input) {
+  if (input.empty()) {
+    return u"";
+  }
+
+  std::u16string str(input);
+  std::replace(str.begin(), str.end(), u' ', u'+');
+  std::u16string_view replaced_view = str;
+
+  return _decompress(replaced_view.length(), 32, [replaced_view](size_t index) {
+    return get_base_value(key_uri_safe, replaced_view.at(index));
+  });
+}
+
 } // namespace pxd::lz_string
 
-constexpr uint32_t char_code_at(std::u16string_view str, int index) {
-  return static_cast<uint32_t>(str.at(index));
-}
-
-template <typename T> constexpr T join_array(const std::vector<T> &vec) {
-  return std::accumulate(vec.begin(), vec.end(), T{},
-                         [](const T &a, const T &b) { return a + b; });
-}
+/*
+ * --------------------------------------------------------------------------------------------------
+ * -- Compress internal function
+ */
 
 std::u16string
 _compress(std::u16string_view uncompressed_str, uint8_t bits_per_char,
@@ -341,6 +447,11 @@ _compress(std::u16string_view uncompressed_str, uint8_t bits_per_char,
   return result;
 }
 
+/*
+ * --------------------------------------------------------------------------------------------------
+ * -- Decompress internal function
+ */
+
 struct DecompressionTracker {
   uint16_t value;
   uint32_t position;
@@ -368,10 +479,6 @@ uint32_t calculate_bits(DecompressionTracker &data, uint32_t power,
   }
 
   return bits;
-}
-
-constexpr std::u16string from_char_code(uint32_t value) {
-  return {static_cast<char16_t>(value)};
 }
 
 std::u16string
@@ -421,6 +528,7 @@ _decompress(uint32_t length, uint32_t reset_value,
     }
 
     bits = calculate_bits(data, 1, num_bits, reset_value, get_next_value);
+    c_number = bits;
 
     switch (bits) {
     case 0:
@@ -438,10 +546,6 @@ _decompress(uint32_t length, uint32_t reset_value,
 
     case 2:
       return join_array(result);
-
-    default:
-      c_number = bits;
-      break;
     }
 
     if (enlarge_in == 0) {
@@ -449,7 +553,7 @@ _decompress(uint32_t length, uint32_t reset_value,
       num_bits++;
     }
 
-    if (!dictionary[c_number].empty()) {
+    if (dictionary.size() > c_number && !dictionary[c_number].empty()) {
       entry = dictionary[c_number];
     } else {
       if (c_number == dictionary.size()) {
