@@ -73,6 +73,7 @@ if(${CMAKE_BUILD_TYPE} MATCHES Debug)
         ${PXD_TEST_SOURCE_DIR}/compress_tests.cpp
         ${PXD_TEST_SOURCE_DIR}/compress_utf16_tests.cpp
         ${PXD_TEST_SOURCE_DIR}/compress_base64_tests.cpp
+        ${PXD_TEST_SOURCE_DIR}/compress_uri_tests.cpp
         ${PXD_SOURCE_FILES}
     )
 
