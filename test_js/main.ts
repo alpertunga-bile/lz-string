@@ -1,11 +1,16 @@
 import LZString from "./node_modules/lz-string/libs/lz-string.min.js";
 
 enum CompressOption {
-  INVALID_UTF16,
-  VALID_UTF16,
-  BASE64,
-  URI,
+  INVALID_UTF16 = "INVALID_UTF16",
+  VALID_UTF16 = "VALID_UTF16",
+  BASE64 = "BASE64",
+  URI = "URI",
 }
+
+const hello_world = "Hello World !!!";
+
+const all_ascii =
+  " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
 const temp_json = {
   string: "Hello, World!",
@@ -56,8 +61,12 @@ const temp_json_float = {
   },
 };
 
-function write_char_code_arrays(value: string, option: CompressOption): void {
-  let print_string = `{`;
+function get_file_info(
+  test_name: string,
+  value: string,
+  option: CompressOption,
+): string {
+  let print_string = `${test_name}\n{`;
 
   const char_codes: number[] = [];
   let result: string = "";
@@ -85,13 +94,31 @@ function write_char_code_arrays(value: string, option: CompressOption): void {
 
   print_string += "}";
 
-  Deno.writeTextFileSync("result.txt", print_string);
+  return print_string;
 }
 
-// Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
 if (import.meta.main) {
-  write_char_code_arrays(
-    JSON.stringify(temp_json_float),
-    CompressOption.INVALID_UTF16,
-  );
+  const options: Set<string> = new Set<string>(Object.keys(CompressOption));
+
+  const text_strings: Map<string, string> = new Map<string, string>();
+  text_strings.set("hello world", hello_world);
+  text_strings.set("all ascii", all_ascii);
+  text_strings.set("temp json", JSON.stringify(temp_json));
+  text_strings.set("temp json float", JSON.stringify(temp_json_float));
+
+  options.forEach((option) => {
+    const text: string[] = [];
+
+    text_strings.forEach((test, test_name) =>
+      text.push(
+        get_file_info(
+          test_name,
+          test,
+          CompressOption[option as keyof typeof CompressOption],
+        ),
+      )
+    );
+
+    Deno.writeTextFileSync(`${option}.txt`, text.join("\n\n"));
+  });
 }
