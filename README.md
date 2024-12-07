@@ -38,17 +38,14 @@ C++20 implemantation of [lz-string](https://github.com/pieroxy/lz-string)
 
 |     Function     | HelloWorld | AllASCII | JSON | JSONFloat |
 | :--------------: | :--------: | :------: | :--: | :-------: |
-|     Compress     |     ✅     |    ❎    |  ✅  |    ❎     |
-|  CompressUTF16   |     ✅     |    ❎    |  ✅  |    ❎     |
-|  CompressBase64  |     ✅     |    ❎    |  ✅  |    ❎     |
-|   CompressURI    |     ✅     |    ❎    |  ✅  |    ❎     |
-|    Decompress    |     ✅     |    ❎    |  ✅  |    ✅     |
-| DecompressUTF16  |     ✅     |    ❎    |  ✅  |    ✅     |
-| DecompressBase64 |     ✅     |    ❎    |  ✅  |    ✅     |
-|  DecompressURI   |     ✅     |    ❎    |  ✅  |    ✅     |
-
-- ✅ : Passed
-- ❎ : Failed
+|     Compress     |     ✔     |    𐄂     |  ✔  |     𐄂     |
+|  CompressUTF16   |     ✔     |    𐄂     |  ✔  |     𐄂     |
+|  CompressBase64  |     ✔     |    𐄂     |  ✔  |     𐄂     |
+|   CompressURI    |     ✔     |    𐄂     |  ✔  |     𐄂     |
+|    Decompress    |     ✔     |    𐄂     |  ✔  |    ✔     |
+| DecompressUTF16  |     ✔     |    𐄂     |  ✔  |    ✔     |
+| DecompressBase64 |     ✔     |    𐄂     |  ✔  |    ✔     |
+|  DecompressURI   |     ✔     |    𐄂     |  ✔  |    ✔     |
 
 - [x] From the results; it seems that original script and the lib compressions are different but they are working with their internal functions.
       For example, JSONFloat test is failing when is compared with original script compression but is passing the decompression tests.
