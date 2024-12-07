@@ -15,53 +15,41 @@
  * -- Forward declaration of internal functions
  */
 
-std::u16string
-_compress(std::u16string_view,
-          uint8_t,
-          const std::function<std::u16string(uint32_t)>&);
+std::u16string _compress(std::u16string_view, uint8_t,
+                         const std::function<std::u16string(uint32_t)> &);
 
-std::u16string
-_decompress(size_t, uint32_t, const std::function<uint16_t(size_t)>&);
+std::u16string _decompress(size_t, uint32_t,
+                           const std::function<uint16_t(size_t)> &);
 
 /*
  * --------------------------------------------------------------------------------------------------
  * -- Helper functions
  */
 
-constexpr uint32_t
-char_code_at(std::u16string_view str, int index)
-{
+constexpr uint32_t char_code_at(std::u16string_view str, int index) {
   return static_cast<uint32_t>(str.at(index));
 }
 
-constexpr std::u16string
-join_array(const std::vector<std::u16string>& vec)
-{
+std::u16string join_array(const std::vector<std::u16string> &vec) {
   return std::accumulate(
-    vec.begin(),
-    vec.end(),
-    std::u16string{},
-    [](const std::u16string& a, const std::u16string& b) { return a + b; });
+      vec.begin(), vec.end(), std::u16string{},
+      [](const std::u16string &a, const std::u16string &b) { return a + b; });
 }
 
-constexpr std::u16string
-from_char_code(uint32_t value)
-{
-  return { static_cast<char16_t>(value) };
+std::u16string from_char_code(uint32_t value) {
+  return {static_cast<char16_t>(value)};
 }
 
 const std::u16string key_base_64 =
-  u"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    u"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
 const std::u16string key_uri_safe =
-  u"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$";
+    u"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$";
 
 std::unordered_map<std::u16string, std::unordered_map<char16_t, uint16_t>>
-  base_reverse_dict = {};
+    base_reverse_dict = {};
 
-uint16_t
-get_base_value(const std::u16string& alphabet, char16_t character)
-{
+uint16_t get_base_value(const std::u16string &alphabet, char16_t character) {
   if (!base_reverse_dict.contains(alphabet)) {
     size_t alphabet_length = alphabet.length();
 
@@ -80,11 +68,9 @@ get_base_value(const std::u16string& alphabet, char16_t character)
 
 namespace pxd::lz_string {
 
-std::u16string
-compress(std::u16string_view input)
-{
+std::u16string compress(std::u16string_view input) {
   if (input.empty()) {
-    return { u"" };
+    return {u""};
   }
 
   return _compress(input, 16, [](uint32_t c) {
@@ -92,9 +78,7 @@ compress(std::u16string_view input)
   });
 }
 
-std::u16string
-decompress(std::u16string_view input)
-{
+std::u16string decompress(std::u16string_view input) {
   if (input.empty()) {
     return u"";
   }
@@ -104,24 +88,19 @@ decompress(std::u16string_view input)
   });
 }
 
-std::u16string
-compressUTF16(std::u16string_view input)
-{
+std::u16string compressUTF16(std::u16string_view input) {
   if (input.empty()) {
     return u"";
   }
 
-  return _compress(input,
-                   15,
+  return _compress(input, 15,
                    [](uint32_t a) {
                      return std::u16string(1, static_cast<char16_t>(a + 32u));
                    }) +
          u" ";
 }
 
-std::u16string
-decompressUTF16(std::u16string_view input)
-{
+std::u16string decompressUTF16(std::u16string_view input) {
   if (input.empty()) {
     return u"";
   }
@@ -131,35 +110,32 @@ decompressUTF16(std::u16string_view input)
   });
 }
 
-std::u16string
-compressBase64(std::u16string_view input)
-{
+std::u16string compressBase64(std::u16string_view input) {
   if (input.empty()) {
     return u"";
   }
 
-  std::u16string result = _compress(
-    input, 6, [](uint32_t a) { return std::u16string(1, key_base_64.at(a)); });
+  std::u16string result = _compress(input, 6, [](uint32_t a) {
+    return std::u16string(1, key_base_64.at(a));
+  });
 
   size_t result_modulo = result.length() % 4;
 
   switch (result_modulo) {
-    case 0:
-      return result;
-    case 1:
-      return result + u"===";
-    case 2:
-      return result + u"==";
-    case 3:
-      return result + u"=";
-    default:
-      return result;
+  case 0:
+    return result;
+  case 1:
+    return result + u"===";
+  case 2:
+    return result + u"==";
+  case 3:
+    return result + u"=";
+  default:
+    return result;
   }
 }
 
-std::u16string
-decompressBase64(std::u16string_view input)
-{
+std::u16string decompressBase64(std::u16string_view input) {
   if (input.empty()) {
     return u"";
   }
@@ -169,20 +145,17 @@ decompressBase64(std::u16string_view input)
   });
 }
 
-std::u16string
-compressEncodedURI(std::u16string_view input)
-{
+std::u16string compressEncodedURI(std::u16string_view input) {
   if (input.empty()) {
     return u"";
   }
 
-  return _compress(
-    input, 6, [](uint32_t a) { return std::u16string(1, key_uri_safe.at(a)); });
+  return _compress(input, 6, [](uint32_t a) {
+    return std::u16string(1, key_uri_safe.at(a));
+  });
 }
 
-std::u16string
-decompressEncodedURI(std::u16string_view input)
-{
+std::u16string decompressEncodedURI(std::u16string_view input) {
   if (input.empty()) {
     return u"";
   }
@@ -204,13 +177,11 @@ decompressEncodedURI(std::u16string_view input)
  */
 
 std::u16string
-_compress(std::u16string_view uncompressed_str,
-          uint8_t bits_per_char,
-          const std::function<std::u16string(uint32_t)>& get_char_from_int)
-{
+_compress(std::u16string_view uncompressed_str, uint8_t bits_per_char,
+          const std::function<std::u16string(uint32_t)> &get_char_from_int) {
 
-  if (uncompressed_str.length() == 0) {
-    return {};
+  if (uncompressed_str.empty()) {
+    return u"";
   }
 
   uint32_t value = 0;
@@ -311,7 +282,7 @@ _compress(std::u16string_view uncompressed_str,
         context_enlarge_in--;
         if (context_enlarge_in == 0) {
           context_enlarge_in =
-            static_cast<uint32_t>(std::pow(2, context_numbits));
+              static_cast<uint32_t>(std::pow(2, context_numbits));
           context_numbits++;
         }
 
@@ -337,7 +308,7 @@ _compress(std::u16string_view uncompressed_str,
       context_enlarge_in--;
       if (context_enlarge_in == 0) {
         context_enlarge_in =
-          static_cast<uint32_t>(std::pow(2, context_numbits));
+            static_cast<uint32_t>(std::pow(2, context_numbits));
         context_numbits++;
       }
 
@@ -411,7 +382,7 @@ _compress(std::u16string_view uncompressed_str,
       context_enlarge_in--;
       if (context_enlarge_in == 0) {
         context_enlarge_in =
-          static_cast<uint32_t>(std::pow(2, context_numbits));
+            static_cast<uint32_t>(std::pow(2, context_numbits));
         context_numbits++;
       }
 
@@ -481,20 +452,15 @@ _compress(std::u16string_view uncompressed_str,
  * -- Decompress internal function
  */
 
-struct DecompressionTracker
-{
+struct DecompressionTracker {
   uint16_t value;
   uint32_t position;
   uint32_t index;
 };
 
-uint32_t
-calculate_bits(DecompressionTracker& data,
-               uint32_t power,
-               uint32_t max_power_upper,
-               uint32_t reset_value,
-               const std::function<uint16_t(size_t)>& get_next_value)
-{
+uint32_t calculate_bits(DecompressionTracker &data, uint32_t power,
+                        uint32_t max_power_upper, uint32_t reset_value,
+                        const std::function<uint16_t(size_t)> &get_next_value) {
   uint32_t bits = 0;
   uint32_t max_power = static_cast<uint32_t>(std::pow(2, max_power_upper));
 
@@ -516,14 +482,12 @@ calculate_bits(DecompressionTracker& data,
 }
 
 std::u16string
-_decompress(size_t length,
-            uint32_t reset_value,
-            const std::function<uint16_t(size_t)>& get_next_value)
-{
-  std::vector<std::u16string> dictionary = { u"0", u"1", u"2" };
+_decompress(size_t length, uint32_t reset_value,
+            const std::function<uint16_t(size_t)> &get_next_value) {
+  std::vector<std::u16string> dictionary = {u"0", u"1", u"2"};
   std::vector<std::u16string> result(length);
 
-  DecompressionTracker data = { get_next_value(0), reset_value, 1 };
+  DecompressionTracker data = {get_next_value(0), reset_value, 1};
 
   uint32_t enlarge_in = 4;
   uint32_t num_bits = 3;
@@ -536,17 +500,17 @@ _decompress(size_t length,
   uint32_t bits = calculate_bits(data, 1, 2, reset_value, get_next_value);
 
   switch (bits) {
-    case 0:
-      bits = calculate_bits(data, 1, 8, reset_value, get_next_value);
-      c = from_char_code(bits);
-      break;
-    case 1:
-      bits = calculate_bits(data, 1, 16, reset_value, get_next_value);
-      c = from_char_code(bits);
-      break;
+  case 0:
+    bits = calculate_bits(data, 1, 8, reset_value, get_next_value);
+    c = from_char_code(bits);
+    break;
+  case 1:
+    bits = calculate_bits(data, 1, 16, reset_value, get_next_value);
+    c = from_char_code(bits);
+    break;
 
-    case 2:
-      return u"";
+  case 2:
+    return u"";
   }
 
   if (c.compare(u"") == 0) {
@@ -556,9 +520,8 @@ _decompress(size_t length,
   dictionary.push_back(c);
   std::u16string w = c;
   result.push_back(c);
-  const bool forever = true;
 
-  while (forever) {
+  while (true) {
     if (data.index > length) {
       return u"";
     }
@@ -567,21 +530,20 @@ _decompress(size_t length,
     c_number = bits;
 
     switch (bits) {
-      case 0:
-        bits = calculate_bits(data, 1, 8, reset_value, get_next_value);
-        dictionary.push_back(from_char_code(bits));
-        c_number = static_cast<uint32_t>(dictionary.size()) - 1;
-        enlarge_in--;
-        break;
-      case 1:
-        bits = calculate_bits(data, 1, 16, reset_value, get_next_value);
-        dictionary.push_back(from_char_code(bits));
-        c_number = static_cast<uint32_t>(dictionary.size()) - 1;
-        enlarge_in--;
-        break;
-
-      case 2:
-        return join_array(result);
+    case 0:
+      bits = calculate_bits(data, 1, 8, reset_value, get_next_value);
+      dictionary.push_back(from_char_code(bits));
+      c_number = static_cast<uint32_t>(dictionary.size()) - 1;
+      enlarge_in--;
+      break;
+    case 1:
+      bits = calculate_bits(data, 1, 16, reset_value, get_next_value);
+      dictionary.push_back(from_char_code(bits));
+      c_number = static_cast<uint32_t>(dictionary.size()) - 1;
+      enlarge_in--;
+      break;
+    case 2:
+      return join_array(result);
     }
 
     if (enlarge_in == 0) {

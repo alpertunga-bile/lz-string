@@ -90,7 +90,7 @@ function get_file_info(
     char_codes.push(result.charCodeAt(i));
   }
 
-  print_string += char_codes.join(", ");
+  print_string += new Uint16Array(char_codes).join(", ");
 
   print_string += "}";
 
@@ -116,7 +116,7 @@ if (import.meta.main) {
           test,
           CompressOption[option as keyof typeof CompressOption],
         ),
-      )
+      ),
     );
 
     Deno.writeTextFileSync(`${option}.txt`, text.join("\n\n"));

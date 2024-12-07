@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <string>
+#include <string_view>
 #include <vector>
 
 enum class LZStringOptions
@@ -13,11 +14,17 @@ enum class LZStringOptions
 };
 
 std::u16string
-get_decompressed(std::string_view value, LZStringOptions option);
+get_decompressed(std::u16string_view value, LZStringOptions option);
+
+std::u16string
+get_compressed(std::string_view value, LZStringOptions option);
+
 bool
 compare_u16(LZStringOptions option,
             std::string_view input,
             const std::vector<uint16_t>& result);
+
+bool compare_u16(std::string_view input, LZStringOptions option);
 
 constexpr char hello_world[16] = "Hello World !!!";
 constexpr char all_ascii[96] = " !\"#$%&'()*+,-./"
