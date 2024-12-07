@@ -1,7 +1,10 @@
 #ifndef _PXD_LZ_STRING_HPP
 #define _PXD_LZ_STRING_HPP
 
+#include <cstdint>
 #include <string>
+#include <string_view>
+#include <vector>
 
 namespace pxd::lz_string {
 
@@ -36,6 +39,10 @@ std::u16string
 compressEncodedURI(std::u16string_view input);
 std::u16string
 decompressEncodedURI(std::u16string_view input);
+
+auto compressUint8Array(std::u16string_view input) -> std::vector<uint8_t>;
+auto decompressUint8Array(const std::vector<uint8_t>& input) -> std::u16string;
+
 
 } // namespace pxd::lz_string
 

@@ -5,10 +5,9 @@
 #include <cstdint>
 #include <functional>
 #include <numeric>
-#include <string_view>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
-#include <vector>
 
 /*
  * --------------------------------------------------------------------------------------------------
@@ -59,6 +58,21 @@ uint16_t get_base_value(const std::u16string &alphabet, char16_t character) {
   }
 
   return base_reverse_dict[alphabet][character];
+}
+
+std::u16string convert_from_uint8_array(const std::vector<uint8_t>& data) {
+  size_t length = std::floor(data.size() / 2);
+  std::vector<std::u16string> result(length);
+
+  for(int i = 0; i < length; ++i) {
+    result.push_back(from_char_code(data[i * 2] * 256 + data [i * 2 + 1]));
+  }
+
+  if(data.size() & 1u) {
+    result.push_back(from_char_code(data[data.size() - 1] * 256));
+  }
+
+  return join_array(result);
 }
 
 /*
@@ -167,6 +181,33 @@ std::u16string decompressEncodedURI(std::u16string_view input) {
   return _decompress(replaced_view.length(), 32, [replaced_view](size_t index) {
     return get_base_value(key_uri_safe, replaced_view.at(index));
   });
+}
+
+auto compressUint8Array(std::u16string_view input) -> std::vector<uint8_t> {
+  if(input.empty()) {
+    return {};
+  }
+
+  std::u16string compressed = compress(input);
+  std::vector<uint8_t> result(compressed.length() * 2);
+  const size_t compressed_length = compressed.length();
+
+  for(int i = 0; i < compressed_length; ++i) {
+    auto current_value = static_cast<uint16_t>(char_code_at(compressed, i));
+
+    result[i * 2u] = current_value >> 8u;
+    result[i * 2u + 1u] = current_value % 256u;
+  }
+
+  return result;
+}
+
+auto decompressUint8Array(const std::vector<uint8_t>& input) -> std::u16string {
+  if(input.size() == 0) {
+    return u"";
+  }
+
+  return decompress(convert_from_uint8_array(input));
 }
 
 } // namespace pxd::lz_string
