@@ -71,10 +71,17 @@ if(${CMAKE_BUILD_TYPE} MATCHES Debug)
         ${PXD_TEST_SOURCE_DIR}/utilities.hpp
 
         ${PXD_TEST_SOURCE_DIR}/utilities.cpp
+
         ${PXD_TEST_SOURCE_DIR}/compress_tests.cpp
         ${PXD_TEST_SOURCE_DIR}/compress_utf16_tests.cpp
         ${PXD_TEST_SOURCE_DIR}/compress_base64_tests.cpp
         ${PXD_TEST_SOURCE_DIR}/compress_uri_tests.cpp
+
+        ${PXD_TEST_SOURCE_DIR}/decompress_tests.cpp
+        ${PXD_TEST_SOURCE_DIR}/decompress_utf16_tests.cpp
+        ${PXD_TEST_SOURCE_DIR}/decompress_base64_tests.cpp
+        ${PXD_TEST_SOURCE_DIR}/decompress_uri_tests.cpp
+
         ${PXD_SOURCE_FILES}
     )
 
@@ -112,4 +119,3 @@ endif()
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
-        
