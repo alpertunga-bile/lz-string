@@ -5,6 +5,7 @@ enum CompressOption {
   VALID_UTF16 = "VALID_UTF16",
   BASE64 = "BASE64",
   URI = "URI",
+  UINT8ARRAY = "UINT8ARRAY",
 }
 
 const hello_world = "Hello World !!!";
@@ -86,11 +87,17 @@ function get_file_info(
       break;
   }
 
-  for (let i = 0; i < result.length; ++i) {
-    char_codes.push(result.charCodeAt(i));
-  }
+  if (option !== CompressOption.UINT8ARRAY) {
+    for (let i = 0; i < result.length; ++i) {
+      char_codes.push(result.charCodeAt(i));
+    }
 
-  print_string += new Uint16Array(char_codes).join(", ");
+    print_string += new Uint16Array(char_codes).join(", ");
+  } else {
+    print_string += new Uint8Array(LZString.compressToUint8Array(value)).join(
+      ", ",
+    );
+  }
 
   print_string += "}";
 
