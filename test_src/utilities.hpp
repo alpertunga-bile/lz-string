@@ -10,7 +10,8 @@ enum class LZStringOptions
   INVALID_UTF16,
   VALID_UTF16,
   BASE64,
-  URI
+  URI,
+  UINT8ARRAY
 };
 
 std::u16string

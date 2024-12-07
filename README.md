@@ -4,7 +4,7 @@ C++20 implemantation of [lz-string](https://github.com/pieroxy/lz-string)
 
 ## Features
 
-- Includes all compresses and decompresses (except `UInt8Array` right now)
+- Includes all compresses and decompresses
 - No dependencies (tests require GoogleTest)
 
 ## Tests
@@ -36,16 +36,18 @@ C++20 implemantation of [lz-string](https://github.com/pieroxy/lz-string)
 
 - Last updated date (dd-MM-yyyy): 07-12-2024
 
-|     Function     | HelloWorld | AllASCII | JSON | JSONFloat |
-| :--------------: | :--------: | :------: | :--: | :-------: |
-|     Compress     |     ✔     |    𐄂     |  ✔  |     𐄂     |
-|  CompressUTF16   |     ✔     |    𐄂     |  ✔  |     𐄂     |
-|  CompressBase64  |     ✔     |    𐄂     |  ✔  |     𐄂     |
-|   CompressURI    |     ✔     |    𐄂     |  ✔  |     𐄂     |
-|    Decompress    |     ✔     |    𐄂     |  ✔  |    ✔     |
-| DecompressUTF16  |     ✔     |    𐄂     |  ✔  |    ✔     |
-| DecompressBase64 |     ✔     |    𐄂     |  ✔  |    ✔     |
-|  DecompressURI   |     ✔     |    𐄂     |  ✔  |    ✔     |
+|       Function       | HelloWorld | AllASCII | JSON | JSONFloat |
+| :------------------: | :--------: | :------: | :--: | :-------: |
+|       Compress       |     ✔     |    𐄂     |  ✔  |     𐄂     |
+|    CompressUTF16     |     ✔     |    𐄂     |  ✔  |     𐄂     |
+|    CompressBase64    |     ✔     |    𐄂     |  ✔  |     𐄂     |
+|     CompressURI      |     ✔     |    𐄂     |  ✔  |     𐄂     |
+|  CompressUint8Array  |     ✔     |    𐄂     |  ✔  |     𐄂     |
+|      Decompress      |     ✔     |    𐄂     |  ✔  |    ✔     |
+|   DecompressUTF16    |     ✔     |    𐄂     |  ✔  |    ✔     |
+|   DecompressBase64   |     ✔     |    𐄂     |  ✔  |    ✔     |
+|    DecompressURI     |     ✔     |    𐄂     |  ✔  |    ✔     |
+| DecompressUint8Array |     ✔     |    𐄂     |  ✔  |    ✔     |
 
 - [x] From the results; it seems that original script and the lib compressions are different but they are working with their internal functions.
       For example, JSONFloat test is failing when is compared with original script compression but is passing the decompression tests.
