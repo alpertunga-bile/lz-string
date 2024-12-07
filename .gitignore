@@ -5,3 +5,5 @@ test_js/node_modules/
 .vscode/
 
 Testing/
+
+.cache/
