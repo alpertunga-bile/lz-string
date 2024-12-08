@@ -34,21 +34,17 @@ C++20 implemantation of [lz-string](https://github.com/pieroxy/lz-string)
 
 ### Test Results
 
-- Last updated date (dd-MM-yyyy): 07-12-2024
+- Last updated date (dd-MM-yyyy): 08-12-2024
 
 |       Function       | HelloWorld | AllASCII | JSON | JSONFloat |
 | :------------------: | :--------: | :------: | :--: | :-------: |
-|       Compress       |     ✔     |    𐄂     |  ✔  |     𐄂     |
-|    CompressUTF16     |     ✔     |    𐄂     |  ✔  |     𐄂     |
-|    CompressBase64    |     ✔     |    𐄂     |  ✔  |     𐄂     |
-|     CompressURI      |     ✔     |    𐄂     |  ✔  |     𐄂     |
-|  CompressUint8Array  |     ✔     |    𐄂     |  ✔  |     𐄂     |
-|      Decompress      |     ✔     |    𐄂     |  ✔  |    ✔     |
-|   DecompressUTF16    |     ✔     |    𐄂     |  ✔  |    ✔     |
-|   DecompressBase64   |     ✔     |    𐄂     |  ✔  |    ✔     |
-|    DecompressURI     |     ✔     |    𐄂     |  ✔  |    ✔     |
-| DecompressUint8Array |     ✔     |    𐄂     |  ✔  |    ✔     |
-
-- [x] From the results; it seems that original script and the lib compressions are different but they are working with their internal functions.
-      For example, JSONFloat test is failing when is compared with original script compression but is passing the decompression tests.
-- [x] The compression and decompression functions are failing on one ascii character.
+|       Compress       |     ✔     |    ✔    |  ✔  |     𐄂     |
+|    CompressUTF16     |     ✔     |    ✔    |  ✔  |     𐄂     |
+|    CompressBase64    |     ✔     |    ✔    |  ✔  |     𐄂     |
+|     CompressURI      |     ✔     |    ✔    |  ✔  |     𐄂     |
+|  CompressUint8Array  |     ✔     |    ✔    |  ✔  |     𐄂     |
+|      Decompress      |     ✔     |    ✔    |  ✔  |    ✔     |
+|   DecompressUTF16    |     ✔     |    ✔    |  ✔  |    ✔     |
+|   DecompressBase64   |     ✔     |    ✔    |  ✔  |    ✔     |
+|    DecompressURI     |     ✔     |    ✔    |  ✔  |    ✔     |
+| DecompressUint8Array |     ✔     |    ✔    |  ✔  |    ✔     |
