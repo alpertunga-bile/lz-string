@@ -8,41 +8,35 @@
 
 namespace pxd::lz_string {
 
-inline std::string
-to_utf8(std::u16string_view value)
-{
-  return { value.begin(), value.end() };
-}
+auto
+to_utf8(std::u16string_view value) -> std::string;
+auto
+to_utf16(std::string_view value) -> std::u16string;
 
-inline std::u16string
-to_utf16(std::string_view value)
-{
-  return { value.begin(), value.end() };
-}
+auto
+compress(std::u16string_view input) -> std::u16string;
+auto
+decompress(std::u16string_view input) -> std::u16string;
 
-std::u16string
-compress(std::u16string_view input);
-std::u16string
-decompress(std::u16string_view input);
+auto
+compressUTF16(std::u16string_view input) -> std::u16string;
+auto
+decompressUTF16(std::u16string_view input) -> std::u16string;
 
-std::u16string
-compressUTF16(std::u16string_view input);
-std::u16string
-decompressUTF16(std::u16string_view input);
+auto
+compressBase64(std::u16string_view input) -> std::u16string;
+auto
+decompressBase64(std::u16string_view input) -> std::u16string;
 
-std::u16string
-compressBase64(std::u16string_view input);
-std::u16string
-decompressBase64(std::u16string_view input);
+auto
+compressEncodedURI(std::u16string_view input) -> std::u16string;
+auto
+decompressEncodedURI(std::u16string_view input) -> std::u16string;
 
-std::u16string
-compressEncodedURI(std::u16string_view input);
-std::u16string
-decompressEncodedURI(std::u16string_view input);
-
-auto compressUint8Array(std::u16string_view input) -> std::vector<uint8_t>;
-auto decompressUint8Array(const std::vector<uint8_t>& input) -> std::u16string;
-
+auto
+compressUint8Array(std::u16string_view input) -> std::vector<uint8_t>;
+auto
+decompressUint8Array(const std::vector<uint8_t>& input) -> std::u16string;
 
 } // namespace pxd::lz_string
 
