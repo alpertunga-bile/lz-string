@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.5.0)
 project(lz_string VERSION 0.1.0 LANGUAGES C CXX)
 
-set(CMAKE_BUILD_TYPE Debug)
-
-set(PXD_TEST_PROJECT_NAME ${PROJECT_NAME}_test)
+option(PXD_BUILD_TEST "Build test executable" OFF)
+option(PXD_BUILD_BENCHMARK "Build benchmark executable" OFF)
 
 set(CXX_VERSION 20)
 
@@ -19,7 +18,6 @@ if(NOT WIN32)
     add_compile_definitions(CMAKE_CXX_INCLUDE_WHAT_YOU_USE=${IWYU_ARGS})
 endif(NOT WIN32)
 
-set(PXD_THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third-party)
 set(PXD_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(PXD_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
@@ -29,6 +27,8 @@ set(PXD_HEADER_FILES
 
 set(PXD_SOURCE_FILES
     ${PXD_SOURCE_DIR}/lz_string.cpp
+
+    ${PXD_HEADER_FILES}
 )
 
 include_directories(
@@ -64,12 +64,12 @@ target_precompile_headers(
 # ------------------------------------------------------------------------------
 # -- Test Executable
 
-if(${CMAKE_BUILD_TYPE} MATCHES Debug)
+if(PXD_BUILD_TEST)
+    set(PXD_TEST_PROJECT_NAME ${PROJECT_NAME}_test)
     set(PXD_TEST_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test_src)
 
     set(PXD_TEST_SOURCE_FILES
         ${PXD_TEST_SOURCE_DIR}/utilities.hpp
-
         ${PXD_TEST_SOURCE_DIR}/utilities.cpp
 
         ${PXD_TEST_SOURCE_DIR}/compress_tests.cpp
@@ -117,6 +117,40 @@ if(${CMAKE_BUILD_TYPE} MATCHES Debug)
     )
 
 endif()
+unset(PXD_BUILD_TEST CACHE)
+
+if(PXD_BUILD_BENCHMARK)
+    set(PXD_BENCHMARK_PROJECT_NAME ${PROJECT_NAME}_benchmark)
+    set(PXD_BENCHMARK_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/benchmark_src)
+
+    set(PXD_BENCHMARK_SOURCE_FILES
+        ${PXD_BENCHMARK_SOURCE_DIR}/benchmark.cpp
+
+        ${PXD_SOURCE_FILES}
+    )
+
+    set(BENCHMARK_ENABLE_TESTING OFF)
+
+    include(FetchContent)
+    FetchContent_Declare(
+        googlebenchmark
+        GIT_REPOSITORY https://github.com/google/benchmark/
+        GIT_TAG main
+    )
+    FetchContent_MakeAvailable(googlebenchmark)
+
+    add_executable(${PXD_BENCHMARK_PROJECT_NAME} ${PXD_BENCHMARK_SOURCE_FILES})
+
+    target_link_libraries(${PXD_BENCHMARK_PROJECT_NAME} ${LIBS_TO_LINK} benchmark::benchmark)
+
+    target_precompile_headers(
+        ${PXD_BENCHMARK_PROJECT_NAME} PRIVATE
+        ${COMMON_STD_HEADERS}
+        ${PXD_HEADER_FILES}
+    )
+
+endif()
+unset(PXD_BUILD_BENCHMARK CACHE)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
