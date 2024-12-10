@@ -40,20 +40,16 @@ C++20 implemantation of [lz-string](https://github.com/pieroxy/lz-string)
 
 ### Test Results
 
-- Last updated date (dd-MM-yyyy): 08-12-202- [lz-string](#lz-string)
-  - [Features](#features)
-  - [Tests](#tests)
-    - [Test Results](#test-results)
-  - [Benchmark](#benchmark)
-4
+- Last updated date (dd-MM-yyyy): 10-12-2024
+
 
 |       Function       | HelloWorld | AllASCII | JSON  | JSONFloat |
 | :------------------: | :--------: | :------: | :---: | :-------: |
-|       Compress       |     ✔      |    ✔     |   ✔   |     X     |
-|    CompressUTF16     |     ✔      |    ✔     |   ✔   |     X     |
-|    CompressBase64    |     ✔      |    ✔     |   ✔   |     X     |
-|     CompressURI      |     ✔      |    ✔     |   ✔   |     X     |
-|  CompressUint8Array  |     ✔      |    ✔     |   ✔   |     X     |
+|       Compress       |     ✔      |    ✔     |   ✔   |     ✔     |
+|    CompressUTF16     |     ✔      |    ✔     |   ✔   |     ✔     |
+|    CompressBase64    |     ✔      |    ✔     |   ✔   |     ✔     |
+|     CompressURI      |     ✔      |    ✔     |   ✔   |     ✔     |
+|  CompressUint8Array  |     ✔      |    ✔     |   ✔   |     ✔     |
 |      Decompress      |     ✔      |    ✔     |   ✔   |     ✔     |
 |   DecompressUTF16    |     ✔      |    ✔     |   ✔   |     ✔     |
 |   DecompressBase64   |     ✔      |    ✔     |   ✔   |     ✔     |
