@@ -123,7 +123,7 @@ if (import.meta.main) {
           test,
           CompressOption[option as keyof typeof CompressOption],
         ),
-      ),
+      )
     );
 
     Deno.writeTextFileSync(`${option}.txt`, text.join("\n\n"));
