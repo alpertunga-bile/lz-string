@@ -1,4 +1,4 @@
-name: lz-string-test
+name: multi-platform-test
 
 on:
   push:
@@ -12,14 +12,8 @@ jobs:
             fail-fast: false
 
             matrix:
-                os: [ubuntu-latest, windows-latest]
+                os: [ubuntu-latest, windows-latest, macos-latest]
                 build_type: [Release]
-                cpp_compiler: [clang++]
-                include:
-                    - os: windows-latest
-                      cpp_compiler: clang++
-                    - os: ubuntu-latest
-                      cpp_compiler: clang++
 
         steps:
             - uses: actions/checkout@v4
