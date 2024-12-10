@@ -1,8 +1,8 @@
 name: lz-string-build
 
 on:
-    push:
-        branches: [ $default-branch ]
+  push:
+      branches: [ $default-branch ]
 
 jobs:
     build:

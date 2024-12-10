@@ -1,8 +1,8 @@
 name: lz-string-test
 
 on:
-    push:
-        branches: [ $default-branch ]
+  push:
+      branches: [ $default-branch ]
 
 jobs:
     build:
@@ -40,10 +40,11 @@ jobs:
                     -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
                     -S ${{ github.workspace }}
                     --target ALL_BUILD
+                    -DPXD_BUILD_TEST=ON
 
             - name: Build
                 # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
-                run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }} -DPXD_BUILD_TEST=ON
+                run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
             - name: Test
               working-directory: ${{ steps.strings.outputs.build-output-dir }}
