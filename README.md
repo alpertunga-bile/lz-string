@@ -1,5 +1,7 @@
 # lz-string
 
+![build_badge](https://github.com/alpertunga-bile/lz-string/actions/workflows/build.yml/badge.svg) ![test_badge](https://github.com/alpertunga-bile/lz-string/actions/workflows/test.yml/badge.svg)
+
 C++20 implemantation of [lz-string](https://github.com/pieroxy/lz-string)
 
 - [lz-string](#lz-string)
