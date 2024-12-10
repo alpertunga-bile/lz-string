@@ -2,7 +2,7 @@ name: lz-string-test
 
 on:
   push:
-      branches: [ $default-branch ]
+      branches: master
 
 jobs:
     build:
