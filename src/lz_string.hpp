@@ -10,6 +10,8 @@ namespace pxd::lz_string {
 
 auto to_utf8(std::u16string_view value) -> std::string;
 auto to_utf16(std::string_view value) -> std::u16string;
+auto to_uint8array(std::u16string_view value) -> std::vector<uint8_t>;
+auto from_uint8array(const std::vector<uint8_t> &value) -> std::u16string;
 
 auto compress(std::u16string_view input) -> std::u16string;
 auto decompress(std::u16string_view input) -> std::u16string;

@@ -63,22 +63,6 @@ auto get_base_value(const std::u16string &alphabet,
   return base_reverse_dict[alphabet][character];
 }
 
-auto convert_from_uint8_array(const std::vector<uint8_t> &data)
-    -> std::u16string {
-  size_t                      length = std::floor(data.size() / 2);
-  std::vector<std::u16string> result(length);
-
-  for (int i = 0; i < length; ++i) {
-    result.push_back(from_char_code(data[i * 2] * 256 + data[i * 2 + 1]));
-  }
-
-  if (data.size() & 1u) {
-    result.push_back(from_char_code(data[data.size() - 1] * 256));
-  }
-
-  return join_array(result);
-}
-
 /*
  * --------------------------------------------------------------------------------------------------
  * -- Public function declarations
@@ -92,6 +76,40 @@ auto to_utf8(std::u16string_view value) -> std::string {
 
 auto to_utf16(std::string_view value) -> std::u16string {
   return {value.begin(), value.end()};
+}
+
+auto to_uint8array(std::u16string_view value) -> std::vector<uint8_t> {
+  bool is_odd = static_cast<uint16_t>(value[value.length() - 1]) % 256 == 0;
+
+  std::vector<uint8_t> buffer;
+  buffer.reserve(value.length() * 2 - (is_odd ? 1 : 0));
+
+  for (int i = 0; i < value.length(); ++i) {
+    auto current_value = static_cast<uint16_t>(value[i]);
+
+    buffer[i * 2] = current_value >> 8u;
+
+    if (!is_odd || i < value.length() - 1) {
+      buffer[i * 2 + 1] = current_value % 256;
+    }
+  }
+
+  return buffer;
+}
+
+auto from_uint8array(const std::vector<uint8_t> &value) -> std::u16string {
+  size_t                      length = std::floor(value.size() / 2);
+  std::vector<std::u16string> result(length);
+
+  for (int i = 0; i < length; ++i) {
+    result.push_back(from_char_code(value[i * 2] * 256 + value[i * 2 + 1]));
+  }
+
+  if (value.size() & 1u) {
+    result.push_back(from_char_code(value[value.size() - 1] * 256));
+  }
+
+  return join_array(result);
 }
 
 auto compress(std::u16string_view input) -> std::u16string {
@@ -221,7 +239,7 @@ auto decompressUint8Array(const std::vector<uint8_t> &input) -> std::u16string {
     return u"";
   }
 
-  return decompress(convert_from_uint8_array(input));
+  return decompress(from_uint8array(input));
 }
 
 } // namespace pxd::lz_string
