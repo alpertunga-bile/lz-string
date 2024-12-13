@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.5.0)
 project(lz_string VERSION 0.1.0 LANGUAGES C CXX)
 
+if(NOT MSVC)
+    set(CMAKE_BUILD_TYPE "Release")
+endif(NOT MSVC)
+
 option(PXD_BUILD_TEST "Build test executable" OFF)
 option(PXD_BUILD_BENCHMARK "Build benchmark executable" OFF)
 
