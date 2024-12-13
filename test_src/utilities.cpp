@@ -22,6 +22,8 @@ std::string get_text_file_content(std::string_view filename) {
 }
 
 std::u16string get_utf16_text_file_content(std::string_view filename) {
+  auto content = get_bin_file_content(filename);
+
   return pxd::lz_string::from_uint8array(get_bin_file_content(filename));
 }
 
@@ -35,7 +37,7 @@ std::vector<uint8_t> get_bin_file_content(std::string_view filename) {
   return {std::istreambuf_iterator<char>(file), {}};
 }
 
-std::vector<char16_t> get_utf16_bin_file_content(std::string_view filename) {
+std::vector<uint16_t> get_utf16_bin_file_content(std::string_view filename) {
   std::u16string content = get_utf16_text_file_content(filename);
 
   return {content.begin(), content.end()};
@@ -49,22 +51,36 @@ get_compress_test_variables(std::string_view test_name,
       std::string("test_src/data/") + test_name.data();
 
   std::string data = get_text_file_content(data_folder_path + "/data.bin");
-  std::vector<uint8_t> content;
 
   switch (option) {
-  case LZStringOptions::BASE64:
-    content = get_bin_file_content(data_folder_path + "/base64.bin");
-    break;
-  case LZStringOptions::URI:
-    content = get_bin_file_content(data_folder_path + "/uri.bin");
-    break;
-  case LZStringOptions::UINT8ARRAY:
-    content = get_bin_file_content(data_folder_path + "/uint8array.bin");
-  default:
-    break;
+  case LZStringOptions::INVALID_UTF16: {
+    std::vector<uint16_t> content =
+        get_utf16_bin_file_content(data_folder_path + "/invalid_utf16.bin");
+    return {data, content};
   }
-
-  return {data, {content.begin(), content.end()}};
+  case LZStringOptions::VALID_UTF16: {
+    std::vector<uint16_t> content =
+        get_utf16_bin_file_content(data_folder_path + "/valid_utf16.bin");
+    return {data, content};
+  }
+  case LZStringOptions::BASE64: {
+    std::vector<uint8_t> content =
+        get_bin_file_content(data_folder_path + "/base64.bin");
+    return {data, {content.begin(), content.end()}};
+  }
+  case LZStringOptions::URI: {
+    std::vector<uint8_t> content =
+        get_bin_file_content(data_folder_path + "/uri.bin");
+    return {data, {content.begin(), content.end()}};
+  }
+  case LZStringOptions::UINT8ARRAY: {
+    std::vector<uint8_t> content =
+        get_bin_file_content(data_folder_path + "/uint8array.bin");
+    return {data, {content.begin(), content.end()}};
+  }
+  default:
+    return {};
+  }
 }
 
 std::u16string get_compressed(std::string_view value, LZStringOptions option) {

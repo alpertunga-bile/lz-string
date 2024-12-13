@@ -17,7 +17,7 @@ enum class LZStringOptions {
 std::string           get_text_file_content(std::string_view filename);
 std::u16string        get_utf16_text_file_content(std::string_view filename);
 std::vector<uint8_t>  get_bin_file_content(std::string_view filename);
-std::vector<char16_t> get_utf16_bin_file_content(std::string_view filename);
+std::vector<uint16_t> get_utf16_bin_file_content(std::string_view filename);
 
 std::tuple<std::string, std::vector<uint16_t>>
 get_compress_test_variables(std::string_view test_name, LZStringOptions option);
