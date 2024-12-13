@@ -43,6 +43,16 @@ std::vector<uint16_t> get_utf16_bin_file_content(std::string_view filename) {
   return {content.begin(), content.end()};
 }
 
+bool get_decompress_test_result(std::string_view test_name,
+                                LZStringOptions  option) {
+  std::string data_folder_path =
+      std::string("test_src/data/") + test_name.data();
+
+  std::string data = get_text_file_content(data_folder_path + "/data.bin");
+
+  return compare_u16(data, option);
+}
+
 std::tuple<std::string, std::vector<uint16_t>>
 get_compress_test_variables(std::string_view test_name,
                             LZStringOptions  option) {
@@ -137,8 +147,17 @@ bool compare_u16(LZStringOptions option, std::string_view input,
 }
 
 bool compare_u16(std::string_view input, LZStringOptions option) {
-  std::u16string compressed   = get_compressed(input, option);
-  std::u16string decompressed = get_decompressed(compressed, option);
+  std::u16string decompressed;
+  std::u16string converted_input = pxd::lz_string::to_utf16(input);
 
-  return pxd::lz_string::to_utf16(input) == decompressed;
+  if (option == LZStringOptions::UINT8ARRAY) {
+    std::vector<uint8_t> compressed_arr =
+        pxd::lz_string::compressUint8Array(converted_input);
+    decompressed = pxd::lz_string::decompressUint8Array(compressed_arr);
+  } else {
+    std::u16string compressed = get_compressed(input, option);
+    decompressed              = get_decompressed(compressed, option);
+  }
+
+  return converted_input == decompressed;
 }

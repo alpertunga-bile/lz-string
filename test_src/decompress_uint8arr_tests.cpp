@@ -1,41 +1,19 @@
 #include "utilities.hpp"
 
-#include "../src/lz_string.hpp"
-
 #include <gtest/gtest.h>
 
-TEST(DecompressUint8Array, HelloWorld) {
-  std::u16string input = pxd::lz_string::to_utf16(hello_world);
+constexpr LZStringOptions compression = LZStringOptions::UINT8ARRAY;
 
-  std::vector<uint8_t> compressed = pxd::lz_string::compressUint8Array(input);
-  std::u16string decompressed = pxd::lz_string::decompressUint8Array(compressed);
+#define MAKE_DECOMPRESS_TEST(test_name, test_data_name)                   \
+  TEST(DecompressUint8Array, test_name) {                                 \
+    EXPECT_TRUE(get_decompress_test_result(test_data_name, compression)); \
+  }
 
-  EXPECT_TRUE(input == decompressed);
-}
-
-TEST(DecompressUint8Array, AllASCII) {
-  std::u16string input = pxd::lz_string::to_utf16(all_ascii);
-
-  std::vector<uint8_t> compressed = pxd::lz_string::compressUint8Array(input);
-  std::u16string decompressed = pxd::lz_string::decompressUint8Array(compressed);
-
-  EXPECT_TRUE(input == decompressed);
-}
-
-TEST(DecompressUint8Array, JSON) {
-  std::u16string input = pxd::lz_string::to_utf16(temp_json);
-
-  std::vector<uint8_t> compressed = pxd::lz_string::compressUint8Array(input);
-  std::u16string decompressed = pxd::lz_string::decompressUint8Array(compressed);
-
-  EXPECT_TRUE(input == decompressed);
-}
-
-TEST(DecompressUint8Array, JSONFloat) {
-  std::u16string input = pxd::lz_string::to_utf16(temp_json_float);
-
-  std::vector<uint8_t> compressed = pxd::lz_string::compressUint8Array(input);
-  std::u16string decompressed = pxd::lz_string::decompressUint8Array(compressed);
-
-  EXPECT_TRUE(input == decompressed);
-}
+MAKE_DECOMPRESS_TEST(AllASCII, "all_ascii")
+MAKE_DECOMPRESS_TEST(HelloWorld, "hello_world")
+MAKE_DECOMPRESS_TEST(LoremIpsum, "lorem_ipsum")
+MAKE_DECOMPRESS_TEST(PI, "pi")
+MAKE_DECOMPRESS_TEST(Repeated, "repeated")
+MAKE_DECOMPRESS_TEST(Tattoo, "tattoo")
+MAKE_DECOMPRESS_TEST(JSON, "temp_json")
+MAKE_DECOMPRESS_TEST(JSONFloat, "temp_json_float")

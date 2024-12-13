@@ -2,26 +2,18 @@
 
 #include <gtest/gtest.h>
 
-TEST(DecompressBase64, HelloWorld) {
-  std::string input(hello_world);
+constexpr LZStringOptions compression = LZStringOptions::BASE64;
 
-  EXPECT_TRUE(compare_u16(input, LZStringOptions::BASE64));
-}
+#define MAKE_DECOMPRESS_TEST(test_name, test_data_name)                   \
+  TEST(DecompressBase64, test_name) {                                     \
+    EXPECT_TRUE(get_decompress_test_result(test_data_name, compression)); \
+  }
 
-TEST(DecompressBase64, AllASCII) {
-  std::string input(all_ascii);
-
-  EXPECT_TRUE(compare_u16(input, LZStringOptions::BASE64));
-}
-
-TEST(DecompressBase64, JSON) {
-  std::string input(temp_json);
-
-  EXPECT_TRUE(compare_u16(input, LZStringOptions::BASE64));
-}
-
-TEST(DecompressBase64, JSONFloat) {
-  std::string input(temp_json_float);
-
-  EXPECT_TRUE(compare_u16(input, LZStringOptions::BASE64));
-}
+MAKE_DECOMPRESS_TEST(AllASCII, "all_ascii")
+MAKE_DECOMPRESS_TEST(HelloWorld, "hello_world")
+MAKE_DECOMPRESS_TEST(LoremIpsum, "lorem_ipsum")
+MAKE_DECOMPRESS_TEST(PI, "pi")
+MAKE_DECOMPRESS_TEST(Repeated, "repeated")
+MAKE_DECOMPRESS_TEST(Tattoo, "tattoo")
+MAKE_DECOMPRESS_TEST(JSON, "temp_json")
+MAKE_DECOMPRESS_TEST(JSONFloat, "temp_json_float")
