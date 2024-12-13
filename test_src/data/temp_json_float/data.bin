@@ -1,0 +1,1 @@
+{"float":3.14159,"double":2.71828,"negativeFloat":-0.12345,"exponentialFloat":0.000123,"arrayOfFloats":[1.1,2.2,3.3,4.4,5.5],"objectWithFloats":{"pi":3.14159,"e":2.71828},"nestedObjectWithFloats":{"point":{"x":1.1,"y":2.2}}}
