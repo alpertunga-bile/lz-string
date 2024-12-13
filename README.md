@@ -12,51 +12,42 @@ C++20 implemantation of [lz-string](https://github.com/pieroxy/lz-string)
 
 ## Features
 
-- Includes all compresses and decompresses
+- Includes all compress and decompress functions
 - No dependencies (tests require GoogleTest and benchmark require Google Benchmark. They are installed automatically.)
 
 ## Tests
 
 - Current tests are:
 
-| Test Name  | Description                                         |
-| :--------: | :-------------------------------------------------- |
-| HelloWorld | Classic hello world                                 |
-|  AllASCII  | Including all the ASCII characters                  |
-|    JSON    | Temp json including all data types except float     |
-| JSONFloat  | Temp json file including floats, objects and arrays |
+|  Test Name  | Description                                         |
+| :---------: | :-------------------------------------------------- |
+| HelloWorld  | Classic hello world                                 |
+|  AllASCII   | Including all the ASCII characters                  |
+|    JSON     | Temp json including all data types except float     |
+|  JSONFloat  | Temp json file including floats, objects and arrays |
+|     PI      | PI number's digits                                  |
+| Lorem Ipsum | Default lorem ipsum text                            |
+|  Repeated   | Including repeated pattern                          |
+|   Tattoo    | Classic text paragraph to test                      |
 
 - Can run the tests with `run_tests` script files.
 
-- Compress tests are following these steps:
-
-  1. Get the encoded string with original script and convert it to Uint16Array
-  2. Compress the input string with implementation and calculate uint16_t array
-  3. Compare the results
-
-- Decompress tests are following these steps:
-
-  1. Compress the input string
-  2. Decompress the compressed string
-  3. Check equality of the input and the decompressed strings
-
 ### Test Results
 
-- Last updated date (dd-MM-yyyy): 10-12-2024
+- Last updated date (dd-MM-yyyy): 13-12-2024
 
-
-|       Function       | HelloWorld | AllASCII | JSON  | JSONFloat |
-| :------------------: | :--------: | :------: | :---: | :-------: |
-|       Compress       |     ✔      |    ✔     |   ✔   |     ✔     |
-|    CompressUTF16     |     ✔      |    ✔     |   ✔   |     ✔     |
-|    CompressBase64    |     ✔      |    ✔     |   ✔   |     ✔     |
-|     CompressURI      |     ✔      |    ✔     |   ✔   |     ✔     |
-|  CompressUint8Array  |     ✔      |    ✔     |   ✔   |     ✔     |
-|      Decompress      |     ✔      |    ✔     |   ✔   |     ✔     |
-|   DecompressUTF16    |     ✔      |    ✔     |   ✔   |     ✔     |
-|   DecompressBase64   |     ✔      |    ✔     |   ✔   |     ✔     |
-|    DecompressURI     |     ✔      |    ✔     |   ✔   |     ✔     |
-| DecompressUint8Array |     ✔      |    ✔     |   ✔   |     ✔     |
+|       Function       | HelloWorld | AllASCII | JSON | JSONFloat | PI  | Lorem Ipsum | Repeated | Tattoo |
+| :------------------: | :--------: | :------: | :--: | :-------: | :-: | :---------: | :------: | :----- |
+|       Compress       |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
+|    CompressUTF16     |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
+|    CompressBase64    |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
+|     CompressURI      |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
+|  CompressUint8Array  |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
+|      Decompress      |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
+|   DecompressUTF16    |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
+|   DecompressBase64   |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
+|    DecompressURI     |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
+| DecompressUint8Array |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
 
 ## Benchmark
 
