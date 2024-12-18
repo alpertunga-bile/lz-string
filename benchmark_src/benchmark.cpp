@@ -22,6 +22,11 @@ static std::string repeated =
 static std::string tattoo =
       get_text_file_content("test_src/data/tattoo/data.bin");
 
+/*
+* ---------------------------------------------------------------------------------------------------
+* -- Compress benchmarks
+*/
+
 #define MAKE_COMPRESS_BENCHMARK(func, inputs) \
 static void BM_##func##_##inputs(benchmark::State& state) {     \
   auto input = pxd::lz_string::to_utf16(inputs);                \
@@ -77,31 +82,64 @@ MAKE_COMPRESS_BENCHMARK(compressUint8Array, pi);
 MAKE_COMPRESS_BENCHMARK(compressUint8Array, repeated);
 MAKE_COMPRESS_BENCHMARK(compressUint8Array, tattoo);
 
-BENCHMARK_MAIN();
-
 /*
-
-#define MAKE_COMPRESS_BENCHMARK(input_name)                      \
-  static void BM_compress_##input_name(benchmark::State &state) { \
-    auto input = pxd::lz_string::to_utf16(input_name);           \
-                                                                 \
-    for (auto _ : state) {                                       \
-      auto compressed = pxd::lz_string::compress(input);         \
-    }                                                            \
-  }                                                               \
-  BENCHMARK(BM_compress_##input_name)->Iterations(NUM_ITER);
-
-#define MAKE_DECOMPRESS_BENCHMARK(input_name)                     \
-  static void BM_compress_##input_name(benchmark::State &state) { \
-    auto compressed = pxd::lz_string::compress(                   \
-        pxd::lz_string::to_utf16(std::string(input_name)));       \
-                                                                  \
-    for (auto _ : state) {                                        \
-      auto decompressed = pxd::lz_string::decompress(compressed); \
-    }                                                             \
-  }                                                               \
-  BENCHMARK(BM_decompressinput_name##)->Iterations(NUM_ITER);
-
-MAKE_COMPRESS_BENCHMARK(hello_world);
-
+ * ---------------------------------------------------------------------------------------------------
+ * -- Decompress benchmarks
 */
+
+#define MAKE_DECOMPRESS_BENCHMARK(compressfunc, decompressfunc, inputs)               \
+  static void BM_decompress_##decompressfunc##_##inputs(benchmark::State& state) {    \
+    auto compressed = pxd::lz_string::compressfunc(pxd::lz_string::to_utf16(inputs)); \
+                                                                                      \
+    for(auto _ : state) {                                                             \
+      auto decompressed = pxd::lz_string::decompressfunc(compressed);                 \
+    }                                                                                 \
+  }                                                                                   \
+  BENCHMARK(BM_decompress_##decompressfunc##_##inputs)->Iterations(NUM_ITER);
+
+MAKE_DECOMPRESS_BENCHMARK(compress, decompress, hello_world);
+MAKE_DECOMPRESS_BENCHMARK(compress, decompress, all_ascii);
+MAKE_DECOMPRESS_BENCHMARK(compress, decompress, temp_json);
+MAKE_DECOMPRESS_BENCHMARK(compress, decompress, temp_json_float);
+MAKE_DECOMPRESS_BENCHMARK(compress, decompress, lorem_ipsum);
+MAKE_DECOMPRESS_BENCHMARK(compress, decompress, pi);
+MAKE_DECOMPRESS_BENCHMARK(compress, decompress, repeated);
+MAKE_DECOMPRESS_BENCHMARK(compress, decompress, tattoo);
+
+MAKE_DECOMPRESS_BENCHMARK(compressUTF16, decompressUTF16, hello_world);
+MAKE_DECOMPRESS_BENCHMARK(compressUTF16, decompressUTF16, all_ascii);
+MAKE_DECOMPRESS_BENCHMARK(compressUTF16, decompressUTF16, temp_json);
+MAKE_DECOMPRESS_BENCHMARK(compressUTF16, decompressUTF16, temp_json_float);
+MAKE_DECOMPRESS_BENCHMARK(compressUTF16, decompressUTF16, lorem_ipsum);
+MAKE_DECOMPRESS_BENCHMARK(compressUTF16, decompressUTF16, pi);
+MAKE_DECOMPRESS_BENCHMARK(compressUTF16, decompressUTF16, repeated);
+MAKE_DECOMPRESS_BENCHMARK(compressUTF16, decompressUTF16, tattoo);
+
+MAKE_DECOMPRESS_BENCHMARK(compressBase64, decompressBase64, hello_world);
+MAKE_DECOMPRESS_BENCHMARK(compressBase64, decompressBase64, all_ascii);
+MAKE_DECOMPRESS_BENCHMARK(compressBase64, decompressBase64, temp_json);
+MAKE_DECOMPRESS_BENCHMARK(compressBase64, decompressBase64, temp_json_float);
+MAKE_DECOMPRESS_BENCHMARK(compressBase64, decompressBase64, lorem_ipsum);
+MAKE_DECOMPRESS_BENCHMARK(compressBase64, decompressBase64, pi);
+MAKE_DECOMPRESS_BENCHMARK(compressBase64, decompressBase64, repeated);
+MAKE_DECOMPRESS_BENCHMARK(compressBase64, decompressBase64, tattoo);
+
+MAKE_DECOMPRESS_BENCHMARK(compressEncodedURI, decompressEncodedURI, hello_world);
+MAKE_DECOMPRESS_BENCHMARK(compressEncodedURI, decompressEncodedURI, all_ascii);
+MAKE_DECOMPRESS_BENCHMARK(compressEncodedURI, decompressEncodedURI, temp_json);
+MAKE_DECOMPRESS_BENCHMARK(compressEncodedURI, decompressEncodedURI, temp_json_float);
+MAKE_DECOMPRESS_BENCHMARK(compressEncodedURI, decompressEncodedURI, lorem_ipsum);
+MAKE_DECOMPRESS_BENCHMARK(compressEncodedURI, decompressEncodedURI, pi);
+MAKE_DECOMPRESS_BENCHMARK(compressEncodedURI, decompressEncodedURI, repeated);
+MAKE_DECOMPRESS_BENCHMARK(compressEncodedURI, decompressEncodedURI, tattoo);
+
+MAKE_DECOMPRESS_BENCHMARK(compressUint8Array, decompressUint8Array, hello_world);
+MAKE_DECOMPRESS_BENCHMARK(compressUint8Array, decompressUint8Array, all_ascii);
+MAKE_DECOMPRESS_BENCHMARK(compressUint8Array, decompressUint8Array, temp_json);
+MAKE_DECOMPRESS_BENCHMARK(compressUint8Array, decompressUint8Array, temp_json_float);
+MAKE_DECOMPRESS_BENCHMARK(compressUint8Array, decompressUint8Array, lorem_ipsum);
+MAKE_DECOMPRESS_BENCHMARK(compressUint8Array, decompressUint8Array, pi);
+MAKE_DECOMPRESS_BENCHMARK(compressUint8Array, decompressUint8Array, repeated);
+MAKE_DECOMPRESS_BENCHMARK(compressUint8Array, decompressUint8Array, tattoo);
+
+BENCHMARK_MAIN();
