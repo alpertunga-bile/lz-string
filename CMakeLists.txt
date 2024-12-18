@@ -68,9 +68,10 @@ target_precompile_headers(
 # ------------------------------------------------------------------------------
 # -- Test Executable
 
+set(PXD_TEST_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test_src)
+
 if(PXD_BUILD_TEST)
     set(PXD_TEST_PROJECT_NAME ${PROJECT_NAME}_test)
-    set(PXD_TEST_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test_src)
 
     set(PXD_TEST_SOURCE_FILES
         ${PXD_TEST_SOURCE_DIR}/utilities.hpp
@@ -130,6 +131,9 @@ if(PXD_BUILD_BENCHMARK)
     set(PXD_BENCHMARK_SOURCE_FILES
         ${PXD_BENCHMARK_SOURCE_DIR}/benchmark.cpp
 
+        ${PXD_TEST_SOURCE_DIR}/utilities.hpp
+        ${PXD_TEST_SOURCE_DIR}/utilities.cpp
+
         ${PXD_SOURCE_FILES}
     )
 
@@ -150,6 +154,7 @@ if(PXD_BUILD_BENCHMARK)
     target_precompile_headers(
         ${PXD_BENCHMARK_PROJECT_NAME} PRIVATE
         ${COMMON_STD_HEADERS}
+        ${PXD_TEST_SOURCE_DIR}/utilities.hpp
         ${PXD_HEADER_FILES}
     )
 
