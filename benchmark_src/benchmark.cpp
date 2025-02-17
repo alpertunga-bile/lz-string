@@ -3,7 +3,7 @@
 #include "../src/lz_string.hpp"
 #include "../test_src/utilities.hpp"
 
-#define NUM_ITER 1000
+#define NUM_ITER 100'000
 
 static std::string hello_world =
     get_text_file_content("test_src/data/hello_world_str/data.bin");
