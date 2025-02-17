@@ -13,7 +13,10 @@ C++20 implementation of [lz-string](https://github.com/pieroxy/lz-string)
 ## Features
 
 - Includes all compress and decompress functions
-- No dependencies (tests require GoogleTest and benchmark require Google Benchmark. They are installed automatically.)
+- No dependencies
+  - [] tests require GoogleTest
+  - [] benchmark require Google Benchmark
+  - [x] They are installed automatically.
 
 ## Tests
 
