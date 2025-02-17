@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5.0)
+cmake_minimum_required(VERSION 3.10.0)
 project(lz_string VERSION 0.1.0 LANGUAGES C CXX)
 
 if(NOT MSVC)
@@ -21,6 +21,25 @@ if(NOT WIN32)
     set(IWYU_ARGS "include-what-you-use -w -Xiwyu --verbose=7")
     add_compile_definitions(CMAKE_CXX_INCLUDE_WHAT_YOU_USE=${IWYU_ARGS})
 endif(NOT WIN32)
+
+if(${CMAKE_BUILD_TYPE} MATCHES "Release")
+
+  message(STATUS "Optimizations are opened for ${PROJECT_NAME}")
+
+  include(CheckIPOSupported)
+  check_ipo_supported(RESULT is_supported OUTPUT error)
+
+  if(is_supported)
+    message(STATUS "Opening LTO")
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+  endif(is_supported)
+
+  if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    message(STATUS "Adding -O3 -march=native flags")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -march=native")
+  endif(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+
+endif(${CMAKE_BUILD_TYPE} MATCHES "Release")
 
 set(PXD_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(PXD_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
