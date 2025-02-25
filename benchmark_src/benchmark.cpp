@@ -6,9 +6,9 @@
 #define NUM_ITER 100'000
 
 static std::string hello_world =
-    get_text_file_content("test_src/data/hello_world_str/data.bin");
+    get_text_file_content("test_src/data/hello_world/data.bin");
 static std::string all_ascii =
-    get_text_file_content("test_src/data/all_ascii_str/data.bin");
+    get_text_file_content("test_src/data/all_ascii/data.bin");
 static std::string temp_json =
     get_text_file_content("test_src/data/temp_json/data.bin");
 static std::string temp_json_float =
