@@ -1,6 +1,7 @@
 # lz-string
 
-![build_badge](https://github.com/alpertunga-bile/lz-string/actions/workflows/build.yml/badge.svg) ![test_badge](https://github.com/alpertunga-bile/lz-string/actions/workflows/test.yml/badge.svg)
+![cd_badge](https://github.com/alpertunga-bile/lz-string/actions/workflows/cd.yml/badge.svg)
+![ci_badge](https://github.com/alpertunga-bile/lz-string/actions/workflows/ci.yml/badge.svg)
 
 C++20 implementation of [lz-string](https://github.com/pieroxy/lz-string)
 
@@ -14,8 +15,8 @@ C++20 implementation of [lz-string](https://github.com/pieroxy/lz-string)
 
 - Includes all compress and decompress functions
 - No dependencies
-  - [] tests require GoogleTest
-  - [] benchmark require Google Benchmark
+  - [ ] tests require GoogleTest
+  - [ ] benchmark requires Google Benchmark
   - [x] They are installed automatically.
 
 ## Tests
@@ -41,16 +42,16 @@ C++20 implementation of [lz-string](https://github.com/pieroxy/lz-string)
 
 |       Function       | HelloWorld | AllASCII | JSON | JSONFloat | PI  | Lorem Ipsum | Repeated | Tattoo |
 | :------------------: | :--------: | :------: | :--: | :-------: | :-: | :---------: | :------: | :----- |
-|       Compress       |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
-|    CompressUTF16     |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
-|    CompressBase64    |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
-|     CompressURI      |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
-|  CompressUint8Array  |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
-|      Decompress      |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
-|   DecompressUTF16    |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
-|   DecompressBase64   |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
-|    DecompressURI     |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
-| DecompressUint8Array |     ✔     |    ✔    |  ✔  |    ✔     | ✔  |     ✔      |    ✔    | ✔     |
+|       Compress       |     ✔      |    ✔     |  ✔   |     ✔     |  ✔  |      ✔      |    ✔     | ✔      |
+|    CompressUTF16     |     ✔      |    ✔     |  ✔   |     ✔     |  ✔  |      ✔      |    ✔     | ✔      |
+|    CompressBase64    |     ✔      |    ✔     |  ✔   |     ✔     |  ✔  |      ✔      |    ✔     | ✔      |
+|     CompressURI      |     ✔      |    ✔     |  ✔   |     ✔     |  ✔  |      ✔      |    ✔     | ✔      |
+|  CompressUint8Array  |     ✔      |    ✔     |  ✔   |     ✔     |  ✔  |      ✔      |    ✔     | ✔      |
+|      Decompress      |     ✔      |    ✔     |  ✔   |     ✔     |  ✔  |      ✔      |    ✔     | ✔      |
+|   DecompressUTF16    |     ✔      |    ✔     |  ✔   |     ✔     |  ✔  |      ✔      |    ✔     | ✔      |
+|   DecompressBase64   |     ✔      |    ✔     |  ✔   |     ✔     |  ✔  |      ✔      |    ✔     | ✔      |
+|    DecompressURI     |     ✔      |    ✔     |  ✔   |     ✔     |  ✔  |      ✔      |    ✔     | ✔      |
+| DecompressUint8Array |     ✔      |    ✔     |  ✔   |     ✔     |  ✔  |      ✔      |    ✔     | ✔      |
 
 ## Benchmark
 
