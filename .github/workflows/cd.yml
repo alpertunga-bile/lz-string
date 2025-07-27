@@ -16,7 +16,7 @@ jobs:
       matrix:
         build_type: [Release]
         architecture: [x86_64]
-        project-name: [lz-string]
+        project-name: [lz_string]
         cmake-args:
           [-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -G "Ninja"]
         job:
